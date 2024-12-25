@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shop_app/pages/provider/cart_provider.dart';
 
 class ProductDetails extends StatefulWidget {
   final Map<String, Object> product;
@@ -9,6 +11,35 @@ class ProductDetails extends StatefulWidget {
 }
 
 class _ProductDetailsState extends State<ProductDetails> {
+  void onTap() {
+    if (selectedSize != 0) {
+      //whenever we are accessing value out of the build function we will set the listen to false because by default it is true.
+
+      Provider.of<CartProvider>(context, listen: false).addProduct(
+        {
+          'id': widget.product['id'],
+          'title': widget.product['title'],
+          'price': widget.product['price'],
+          'size': selectedSize,
+          'company': widget.product['company'],
+          'imageUrl': widget.product['imageUrl']
+        },
+      );
+      //ScaffoldMessanger notifies the user about the mistake he does or the option he doesnt chooses
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Prodcut added Successfully.'),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please Select A Size'),
+        ),
+      );
+    }
+  }
+
   int selectedSize = 0;
   @override
   Widget build(BuildContext context) {
@@ -81,7 +112,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                 Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: ElevatedButton.icon(
-                    onPressed: () {},
+                    onPressed: onTap,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).colorScheme.primary,
                       minimumSize: Size(double.infinity, 50),

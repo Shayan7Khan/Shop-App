@@ -35,14 +35,3 @@ final product = [
     'imageUrl': 'assets/images/shoes_4.png'
   }
 ];
-
-final cart = [
-  {
-    'id': '2',
-    'title': 'Jordan Shoes',
-    'price': 39.76,
-    'size': 8,
-    'company': 'Jordan',
-    'imageUrl': 'assets/images/shoes_3.png'
-  }
-];

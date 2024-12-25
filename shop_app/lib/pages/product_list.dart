@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shop_app/global_variables.dart';
-import 'package:shop_app/product_card.dart';
-import 'package:shop_app/product_details.dart';
+import 'package:shop_app/pages/product_card.dart';
+import 'package:shop_app/pages/product_details.dart';
 
 class ProductList extends StatefulWidget {
   const ProductList({super.key});
@@ -29,6 +29,7 @@ class _ProductListState extends State<ProductList> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     const border = OutlineInputBorder(
       borderSide: BorderSide(
           // color: Color.fromRGBO(255, 255, 255, 1),
@@ -103,33 +104,63 @@ class _ProductListState extends State<ProductList> {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: product.length,
-              itemBuilder: (context, index) {
-                //to get the product at each particular index
-                final products = product[index];
+            child: size.width > 650
+                ? Expanded(
+                    child: GridView.builder(
+                      itemCount: product.length,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2),
+                      itemBuilder: (context, index) {
+                        final products = product[index];
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(builder: (context) {
+                              return ProductDetails(product: products);
+                            }));
+                          },
+                          child: ProductCard(
+                            //we used as String overhere because in global variables its defined as String,object so it thinks its a object not a particular value so we need to tell it that we are sure its a string
+                            title: products['title'] as String,
+                            price: products['price'] as double,
+                            image: products['imageUrl'] as String,
 
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (context) {
-                      return ProductDetails(product: products);
-                    }));
-                  },
-                  child: ProductCard(
-                    //we used as String overhere because in global variables its defined as String,object so it thinks its a object not a particular value so we need to tell it that we are sure its a string
-                    title: products['title'] as String,
-                    price: products['price'] as double,
-                    image: products['imageUrl'] as String,
+                            //we did this in order to make our app look attractive so what we did is that we told the flutter that if the product is being showcased on even index so make the color of that particular container light blueish else make it white.
+                            backgroundColor: index.isEven
+                                ? const Color.fromRGBO(216, 240, 253, 1)
+                                : const Color.fromRGBO(245, 247, 249, 1),
+                          ),
+                        );
+                      },
+                    ),
+                  )
+                : ListView.builder(
+                    itemCount: product.length,
+                    itemBuilder: (context, index) {
+                      //to get the product at each particular index
+                      final products = product[index];
 
-                    //we did this in order to make our app look attractive so what we did is that we told the flutter that if the product is being showcased on even index so make the color of that particular container light blueish else make it white.
-                    backgroundColor: index.isEven
-                        ? const Color.fromRGBO(216, 240, 253, 1)
-                        : const Color.fromRGBO(245, 247, 249, 1),
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) {
+                            return ProductDetails(product: products);
+                          }));
+                        },
+                        child: ProductCard(
+                          //we used as String overhere because in global variables its defined as String,object so it thinks its a object not a particular value so we need to tell it that we are sure its a string
+                          title: products['title'] as String,
+                          price: products['price'] as double,
+                          image: products['imageUrl'] as String,
+
+                          //we did this in order to make our app look attractive so what we did is that we told the flutter that if the product is being showcased on even index so make the color of that particular container light blueish else make it white.
+                          backgroundColor: index.isEven
+                              ? const Color.fromRGBO(216, 240, 253, 1)
+                              : const Color.fromRGBO(245, 247, 249, 1),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
           )
         ],
       ),
